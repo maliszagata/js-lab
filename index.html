@@ -13,39 +13,175 @@
             color: #0B3954;
         }
 		
+		h2 {
+            color: #0B3954;
+        }
+		
 		.green {
 			color: green;
 		}
 		
 		.hiden {
 			display: none;
-		}	
+		}
+		
+		.button-START {
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  
+		}
+		
+		.button-STOP {
+		  background-color: #f44336; /* Red */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		}
+		
+		.button-CLICK {
+		  background-color: white; /* Red */
+		  border: 2px solid black;
+		  color: white;
+		  padding: 50px 150px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 100px;
+		  border-radius: 12px;
+		}
+		
     </style>
 </head>
 <body>
 <div id="app">
+
     <h1 id="main-header">Refleksomierzacz</h1>
     <p>Witaj w grze, która pozwoli zmierzyć Twój refleks!</p>
-    <ol>
-        <li class="boring">Nauczyć się HTML</li>
-        <li class="boring">Nauczyć się CSS</li>
-        <li>Nauczyć się JS</li>
-        <li id="super-important">Zaimplementować</li>
-    </ol>
-</div>
-<script>
-	let div = document.createElement('div');
-	div.classList.add('green');
-	div.innerText = 'Zielony tekst (jeśli dodasz CSS)';
-	document.getElementById('app').append(div); // jest też prepend
 	
-	let listItem = document.createElement('li');
-	listItem.innerText = 'Zagrać';
-	// dodaję na koniec listy
-	document.querySelector("#app ol li:last-child").before(listItem); // jest też before
+	<button type="button" id="button-start" class="button-START" onclick="startGame()">START</button>
+	
+</div>
 
-	document.querySelectorAll("#app .boring").forEach((e) => e.remove());
 
+<div id="click">	
+
+    <p>Poniżej znajdziesz pole, w które musisz kliknąć jak najszybciej po zmianie koloru pola.</p>
+	<button type="button" id="button-to-click" class="button-CLICK" onclick="addSuccess()">CLICK ME!</button>
+	
+</div>
+
+<div id="counter">
+
+    <p>Odliczanie!</p>
+	
+	<p>Poniżej znajdziesz pole, w które musisz kliknąć jak najszybciej po zmianie koloru pola.</p>
+	
+</div>
+
+<div id="stat">
+
+    <h2 id="stat-header">STATYSTYKI</h2>
+    <p>Witaj w grze, która pozwoli zmierzyć Twój refleks!</p>
+	
+	<p id="stat-success"> "" </p>
+	<p id="stat-cheat"> "" </p>
+	
+</div>
+
+<script>
+
+	var count = 3;
+	var cheats = 0;
+	var successes = 0;
+
+	//var numberOfChances = 5;
+	
+	function startGame() {
+		numberOfChances = 5;
+		cheats = 0;
+		successes = 0;
+		//countDown();
+		
+		document.getElementById("button-start").setAttribute('onclick', "stopGame()");
+		document.getElementById("button-start").innerText = "ZAKOŃCZ GRĘ";
+		document.getElementById("button-start").className = "button-STOP";
+		
+		document.getElementById("button-to-click").innerText = "CLICK ME!";
+		document.getElementById("button-to-click").style.background = "white";
+		
+		while (numberOfChances > 0) {
+		const randomNumberBetwen0And1 = Math.random()*6000;
+			setTimeout(() => {  setNewColor(); }, randomNumberBetwen0And1);
+			numberOfChances--;
+		}
+	}
+	
+	var countColorChange = 5;
+	function setNewColor() {
+		var randomColor = Math.floor(Math.random()*16777215).toString(16);
+		document.getElementById("button-to-click").style.background =  "#" + randomColor;
+		document.getElementById("button-to-click").setAttribute('onclick', "addSuccess()");
+		
+		countColorChange--;		
+		if (countColorChange == 0) {
+			stopGame();
+			countColorChange = 5;
+			return;
+		}	
+	}
+	
+	function stopGame() {
+		document.getElementById("button-to-click").removeAttribute('onclick');
+		document.getElementById("button-to-click").style.background =  "#57F9AD";
+		document.getElementById("button-to-click").innerText = "KONIEC GRY";
+		
+		document.getElementById("button-start").setAttribute('onclick', "startGame()");
+		document.getElementById("button-start").innerText = "START";
+		document.getElementById("button-start").className = "button-START";
+		
+		document.getElementById("stat-success").innerText = successes;
+		document.getElementById("stat-cheat").innerText = cheats;
+
+		
+	}
+		
+	function countDown() {
+		if (count > 0) {
+			printCountDown(count);
+			console.log(count);
+			count--;
+			setTimeout(() => { countDown() }, 700);
+		}	
+		else {
+			printCountDown("START!");
+			count = 3;
+			//setNewColor();
+			return true;
+		}
+	}
+	
+	function printCountDown(count) {
+		document.getElementById("counter").innerText = count;
+	}
+	
+	function addSuccess() {
+		document.getElementById("button-to-click").setAttribute('onclick', "addCheat()");
+		successes++;
+	}
+	
+	function addCheat() {
+		cheats++;
+	}
 
 </script>
 </body>
