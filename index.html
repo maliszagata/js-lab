@@ -93,23 +93,34 @@
     <h2 id="stat-header">STATYSTYKI</h2>
     <p>Witaj w grze, która pozwoli zmierzyć Twój refleks!</p>
 	
-	<p id="stat-success"> "" </p>
-	<p id="stat-cheat"> "" </p>
+	<p>Ilość poprawnych kliknięć:</p>
+	<p id="stat-success"></p>
+	<p>Ilość niepoprawnych kliknięć:</p>
+	<p id="stat-cheat"></p>
+	
+	<p>Statystyki:</p>
+	<p id="stat-times"></p>
+	
+	<p>Najlepszy czas w wszystkich rundach:</p>
+	<p id="stat-best-time"></p>
 	
 </div>
 
 <script>
 
 	var count = 3;
+	var bestTime;
+	var startTime;
+	var stopTime;
 	var cheats = 0;
 	var successes = 0;
-
-	//var numberOfChances = 5;
+	var times = [];
 	
 	function startGame() {
-		numberOfChances = 5;
+		var numberOfChances = 5;
 		cheats = 0;
 		successes = 0;
+		times = [];
 		//countDown();
 		
 		document.getElementById("button-start").setAttribute('onclick', "stopGame()");
@@ -131,6 +142,9 @@
 		var randomColor = Math.floor(Math.random()*16777215).toString(16);
 		document.getElementById("button-to-click").style.background =  "#" + randomColor;
 		document.getElementById("button-to-click").setAttribute('onclick', "addSuccess()");
+
+		const now = new Date();
+		startTime = now.getTime();
 		
 		countColorChange--;		
 		if (countColorChange == 0) {
@@ -176,11 +190,25 @@
 	
 	function addSuccess() {
 		document.getElementById("button-to-click").setAttribute('onclick', "addCheat()");
+		const now = new Date();
+		stopTime = now.getTime();
+		countTimes(startTime, stopTime);
 		successes++;
+		document.getElementById("stat-times").innerText = times;
+		document.getElementById("stat-best-time").innerText = bestTime;
 	}
 	
 	function addCheat() {
 		cheats++;
+	}
+	
+	function countTimes(startTime, stopTime) {
+		var currentTime = (stopTime - startTime)/1000;
+		times.push(currentTime);
+		
+		if (bestTime > currentTime || !bestTime) {
+			bestTime = currentTime;
+		}
 	}
 
 </script>
