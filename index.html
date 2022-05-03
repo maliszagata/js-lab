@@ -66,7 +66,7 @@
 <div id="app">
 
     <h1 id="main-header">Refleksomierzacz</h1>
-    <p>Witaj w grze, która pozwoli zmierzyć Twój refleks!</p>
+    <p><center>Witaj w grze, która pozwoli zmierzyć Twój refleks!</center></p>
 	
 	<button type="button" id="button-start" class="button-START" onclick="startGame()">START</button>
 	
@@ -104,17 +104,26 @@
 	<p>Najlepszy czas w wszystkich rundach:</p>
 	<p id="stat-best-time"></p>
 	
+	<p>Najgorszy czas w wszystkich rundach:</p>
+	<p id="stat-worst-time"></p>
+	
+	<p>Średni czas w wszystkich rundach:</p>
+	<p id="stat-mean-time"></p>
+	
 </div>
 
 <script>
 
 	var count = 3;
 	var bestTime;
+	var worstTime;
 	var startTime;
 	var stopTime;
 	var cheats = 0;
 	var successes = 0;
 	var times = [];
+	var meanTimes;
+	var randomTimeToWait = 0;
 	
 	function startGame() {
 		var numberOfChances = 5;
@@ -127,14 +136,25 @@
 		document.getElementById("button-start").innerText = "ZAKOŃCZ GRĘ";
 		document.getElementById("button-start").className = "button-STOP";
 		
-		document.getElementById("button-to-click").innerText = "CLICK ME!";
 		document.getElementById("button-to-click").style.background = "white";
 		
+		//setRandomTimeToWait();
 		while (numberOfChances > 0) {
-		const randomNumberBetwen0And1 = Math.random()*6000;
-			setTimeout(() => {  setNewColor(); }, randomNumberBetwen0And1);
+			setRandomTimeToWait(0)
+			setTimeout(() => {  setNewColor(); }, randomTimeToWait);
+			console.log("tu jestem. czekałem " + randomTimeToWait);
+			//setTimeout(() => {  setRandomTimeToWait(); }, randomTimeToWait);
+			setRandomTimeToWait(randomTimeToWait);
+			console.log("tu jestem. wygenerowałem nowy czas " + randomTimeToWait);
+			//setTimeout(() => {  setRandomTimeToWait();  }, randomTimeToWait);
 			numberOfChances--;
 		}
+	}
+	
+	function setRandomTimeToWait(timeToWait) {
+		min = Math.ceil(4000)
+		max = Math.floor(8000);
+		randomTimeToWait = timeToWait + Math.floor(Math.random() * (max - min)) + min;
 	}
 	
 	var countColorChange = 5;
@@ -142,13 +162,19 @@
 		var randomColor = Math.floor(Math.random()*16777215).toString(16);
 		document.getElementById("button-to-click").style.background =  "#" + randomColor;
 		document.getElementById("button-to-click").setAttribute('onclick', "addSuccess()");
+		document.getElementById("button-to-click").innerText = countColorChange;
+		
+		setRandomTimeToWait();
 
 		const now = new Date();
 		startTime = now.getTime();
 		
 		countColorChange--;		
 		if (countColorChange == 0) {
-			stopGame();
+			console.log("koncze gre");
+			setRandomTimeToWait(0);
+			console.log("policzylem, ze skoncze gre za " + randomTimeToWait);
+			setTimeout(() => stopGame(), randomTimeToWait);
 			countColorChange = 5;
 			return;
 		}	
@@ -161,12 +187,7 @@
 		
 		document.getElementById("button-start").setAttribute('onclick', "startGame()");
 		document.getElementById("button-start").innerText = "START";
-		document.getElementById("button-start").className = "button-START";
-		
-		document.getElementById("stat-success").innerText = successes;
-		document.getElementById("stat-cheat").innerText = cheats;
-
-		
+		document.getElementById("button-start").className = "button-START";	
 	}
 		
 	function countDown() {
@@ -194,12 +215,21 @@
 		stopTime = now.getTime();
 		countTimes(startTime, stopTime);
 		successes++;
-		document.getElementById("stat-times").innerText = times;
-		document.getElementById("stat-best-time").innerText = bestTime;
+		printStatistic();
 	}
 	
 	function addCheat() {
 		cheats++;
+		printStatistic();
+	}
+	
+	function printStatistic() {
+		document.getElementById("stat-times").innerText = times;
+		document.getElementById("stat-best-time").innerText = bestTime;
+		document.getElementById("stat-worst-time").innerText = worstTime;
+		document.getElementById("stat-mean-time").innerText = meanTimes;
+		document.getElementById("stat-success").innerText = successes;
+		document.getElementById("stat-cheat").innerText = cheats;
 	}
 	
 	function countTimes(startTime, stopTime) {
@@ -209,6 +239,20 @@
 		if (bestTime > currentTime || !bestTime) {
 			bestTime = currentTime;
 		}
+		
+		if (worstTime < currentTime || !worstTime) {
+			worstTime = currentTime;
+		}
+		
+		meanTimes = calculateMean(times);
+	}
+	
+	function calculateMean(table) {
+		var sum = 0;
+		for (let number of table) {
+			sum = sum + number;
+		}
+		return sum/table.length;
 	}
 
 </script>
