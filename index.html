@@ -3,27 +3,36 @@
     <meta charset="UTF-8">
     <title>JS Lab</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, serif;
-        }
-
-        h1 {
-            color: #0B3954;
-        }
-		
-		h2 {
-            color: #0B3954;
-        }
-		
-		.green {
-			color: green;
-		}
-		
-		.hiden {
-			display: none;
-		}
+	
+	* {
+		box-sizing: border-box; 
+	}
+	body {
+		margin: 0;
+	}
+	#main {
+		display: flex;
+		min-height: calc(100vh - 40vh);
+	}
+	#main > article {
+		flex: 1;
+	}
+	#main > nav, 
+	#main > aside {
+		flex: 0 0 20vw;
+		background: beige;
+	}
+	#main > nav {
+		order: -1;
+	}
+	header, footer, article, nav, aside {
+		padding: 1em;
+	}
+	header, footer {
+		background: yellowgreen;
+		height: 20vh;
+		font-size: 100px;
+	}
 		
 		.button-START {
 		  background-color: #4CAF50; /* Green */
@@ -33,8 +42,8 @@
 		  text-align: center;
 		  text-decoration: none;
 		  display: inline-block;
-		  font-size: 16px;
-		  
+		  font-size: 100px;
+		  border-radius: 12px;
 		}
 		
 		.button-STOP {
@@ -45,9 +54,10 @@
 		  text-align: center;
 		  text-decoration: none;
 		  display: inline-block;
-		  font-size: 16px;
+		  font-size: 66px; 
+		  border-radius: 12px;
 		}
-		
+
 		.button-CLICK {
 		  background-color: white; /* Red */
 		  border: 2px solid black;
@@ -56,62 +66,151 @@
 		  text-align: center;
 		  text-decoration: none;
 		  display: inline-block;
-		  font-size: 100px;
 		  border-radius: 12px;
+		  padding: 120px 300px;
+		  font-size: 100px;
+
 		}
 		
+		.container {
+			display: -ms-grid;
+			display: grid;
+			-ms-grid-rows: (1fr)[2];
+			grid-template-rows: repeat(2, 1fr);
+			-ms-grid-columns: (1fr)[4];
+			grid-template-columns: repeat(4, 1fr);
+			width: 100vw;
+			height: 100vh;
+		}
+
+	@media screen and (max-width: 60em) {
+		.container {
+		-ms-grid-rows: (1fr)[4];
+        grid-template-rows: repeat(4, 1fr);
+	}
+}
+
+	.grid-1 {
+	  -ms-grid-column: 1;
+		  grid-column-start: 1;
+	  grid-column-end: 3;
+	  -ms-grid-row: 1;
+		  grid-row: 1;
+	}
+
+	@media screen and (max-width: 60em) {
+	  .grid-1 {
+		-ms-grid-column: 1;
+			grid-column-start: 1;
+		grid-column-end: 5;
+		-ms-grid-row: 1;
+			grid-row: 1;
+	  }
+	}
+
+	.grid-2 {
+	  -ms-grid-column: 3;
+		  grid-column-start: 3;
+	  grid-column-end: 5;
+	  -ms-grid-row: 1;
+		  grid-row: 1;
+	}
+
+	@media screen and (max-width: 60em) {
+	  .grid-2 {
+		-ms-grid-column: 1;
+			grid-column-start: 1;
+		grid-column-end: 5;
+		-ms-grid-row: 2;
+			grid-row: 2;
+	  }
+	}
+
+	.grid-3 {
+	  -ms-grid-column: 1;
+		  grid-column-start: 1;
+	  grid-column-end: 3;
+	  -ms-grid-row: 2;
+		  grid-row: 2;
+	}
+
+	@media screen and (max-width: 60em) {
+	  .grid-3 {
+		-ms-grid-column: 1;
+			grid-column-start: 1;
+		grid-column-end: 5;
+		-ms-grid-row: 3;
+			grid-row: 3;
+	  }
+	}
+
+	.grid-4 {
+	  -ms-grid-column: 3;
+		  grid-column-start: 3;
+	  grid-column-end: 5;
+	  -ms-grid-row: 2;
+		  grid-row: 2;
+	}
+
+	@media screen and (max-width: 60em) {
+	  .grid-4 {
+		-ms-grid-column: 1;
+			grid-column-start: 1;
+		grid-column-end: 5;
+		-ms-grid-row: 4;
+			grid-row: 4;
+	  }
+	}
+
+	.callout {
+	  margin: 0;
+}
     </style>
 </head>
-<body>
-<div id="app">
 
-    <h1 id="main-header">Refleksomierzacz</h1>
-    <p><center>Witaj w grze, która pozwoli zmierzyć Twój refleks!</center></p>
+<body>
+
+  <header id = "app">REFLEKSOMIERZACZ</header>
+  
+  <div id="main">
+    <article><h2>OBSZAR GRY</h2>
+	<button type="button" id="button-to-click" class="button-CLICK">0</button>
+	</article>
+    <nav><h2 id="rules-header">ZASADY GRY</h2>
+    <p id="rules">Gra polega na zmierzeniu Twojego refleksu
+	Po wciśnięciu przycisku START pole po lewej stronie w losowych odstępach czasu zmieni
+	swój kolor. Twoim zadaniem jest kliknięcie w te pole jak najszybciej po zmianie koloru.
+	Gra zmierzy czas Twojej reakcji a także wyświetli statystyki.</p>
+	
+	<p>Powodzenia!</p>
 	
 	<button type="button" id="button-start" class="button-START" onclick="startGame()">START</button>
-	
-</div>
 
+	</nav>
+    <aside><h2>STATYSTYKI</h2>
 
-<div id="click">	
-
-    <p>Poniżej znajdziesz pole, w które musisz kliknąć jak najszybciej po zmianie koloru pola.</p>
-	<button type="button" id="button-to-click" class="button-CLICK" onclick="addSuccess()">CLICK ME!</button>
-	
-</div>
-
-<div id="counter">
-
-    <p>Odliczanie!</p>
-	
-	<p>Poniżej znajdziesz pole, w które musisz kliknąć jak najszybciej po zmianie koloru pola.</p>
-	
-</div>
-
-<div id="stat">
-
-    <h2 id="stat-header">STATYSTYKI</h2>
-    <p>Witaj w grze, która pozwoli zmierzyć Twój refleks!</p>
-	
-	<p>Ilość poprawnych kliknięć:</p>
-	<p id="stat-success"></p>
-	<p>Ilość niepoprawnych kliknięć:</p>
-	<p id="stat-cheat"></p>
-	
-	<p>Statystyki:</p>
-	<p id="stat-times"></p>
-	
-	<p>Najlepszy czas w wszystkich rundach:</p>
-	<p id="stat-best-time"></p>
-	
-	<p>Najgorszy czas w wszystkich rundach:</p>
-	<p id="stat-worst-time"></p>
-	
-	<p>Średni czas w wszystkich rundach:</p>
-	<p id="stat-mean-time"></p>
-	
-</div>
-
+		<div id="stat">			
+			<p>Ilość poprawnych kliknięć:</p>
+			<p id="stat-success"></p>
+			<p>Ilość niepoprawnych kliknięć:</p>
+			<p id="stat-cheat"></p>
+			
+			<p>Statystyki:</p>
+			<p id="stat-times"></p>
+			
+			<p>Najlepszy czas w wszystkich rundach:</p>
+			<p id="stat-best-time"></p>
+			
+			<p>Najgorszy czas w wszystkich rundach:</p>
+			<p id="stat-worst-time"></p>
+			
+			<p>Średni czas w wszystkich rundach:</p>
+			<p id="stat-mean-time"></p>
+		</div>
+		</aside>
+  </div>
+  <footer></footer>
+  
 <script>
 
 	var count = 3;
@@ -124,9 +223,12 @@
 	var times = [];
 	var meanTimes;
 	var randomTimeToWait = 0;
-	
+
 	function startGame() {
+		document.getElementById("button-to-click").style.background = "white";
+		document.getElementById("button-to-click").style.fontSize =  "100px";
 		var numberOfChances = 5;
+		countColorChange = 5;
 		cheats = 0;
 		successes = 0;
 		times = [];
@@ -136,24 +238,18 @@
 		document.getElementById("button-start").innerText = "ZAKOŃCZ GRĘ";
 		document.getElementById("button-start").className = "button-STOP";
 		
-		document.getElementById("button-to-click").style.background = "white";
 		
-		//setRandomTimeToWait();
+		setRandomTimeToWait(0)
 		while (numberOfChances > 0) {
-			setRandomTimeToWait(0)
 			setTimeout(() => {  setNewColor(); }, randomTimeToWait);
-			console.log("tu jestem. czekałem " + randomTimeToWait);
-			//setTimeout(() => {  setRandomTimeToWait(); }, randomTimeToWait);
 			setRandomTimeToWait(randomTimeToWait);
-			console.log("tu jestem. wygenerowałem nowy czas " + randomTimeToWait);
-			//setTimeout(() => {  setRandomTimeToWait();  }, randomTimeToWait);
 			numberOfChances--;
 		}
 	}
 	
 	function setRandomTimeToWait(timeToWait) {
-		min = Math.ceil(4000)
-		max = Math.floor(8000);
+		min = Math.ceil(2500)
+		max = Math.floor(4500);
 		randomTimeToWait = timeToWait + Math.floor(Math.random() * (max - min)) + min;
 	}
 	
@@ -163,8 +259,10 @@
 		document.getElementById("button-to-click").style.background =  "#" + randomColor;
 		document.getElementById("button-to-click").setAttribute('onclick', "addSuccess()");
 		document.getElementById("button-to-click").innerText = countColorChange;
+		document.getElementById("button-to-click").style.fontSize =  "100px";
+
 		
-		setRandomTimeToWait();
+		//setRandomTimeToWait();
 
 		const now = new Date();
 		startTime = now.getTime();
@@ -181,8 +279,16 @@
 	}
 	
 	function stopGame() {
+	
+		var highestTimeoutId = setTimeout(";");
+		for (var i = 0 ; i < highestTimeoutId ; i++) {
+			clearTimeout(i); 
+		}
+		
 		document.getElementById("button-to-click").removeAttribute('onclick');
 		document.getElementById("button-to-click").style.background =  "#57F9AD";
+		document.getElementById("button-to-click").style.fontSize =  "30px";
+		document.getElementById("button-to-click").style.padding =  "120px 300px";
 		document.getElementById("button-to-click").innerText = "KONIEC GRY";
 		
 		document.getElementById("button-start").setAttribute('onclick', "startGame()");
